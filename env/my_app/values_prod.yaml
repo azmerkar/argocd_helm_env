@@ -1,0 +1,45 @@
+namespace: prod
+
+replicaCount: 3
+
+image:
+  repository: my-app
+  tag: "stable"
+  pullPolicy: Always
+
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "1"
+  limits:
+    memory: "1Gi"
+    cpu: "2"
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 3000
+
+ingress:
+  enabled: true
+  hosts:
+    - host: my-app.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - my-app.com
+      secretName: prod-ingress-tls
+
+logLevel: error
+
+persistence:
+  enabled: true
+  storageClass: premium
+  size: 10Gi
+
+secrets:
+  enabled: true
+  vaultPath: "secret/data/prod/my-app"
+

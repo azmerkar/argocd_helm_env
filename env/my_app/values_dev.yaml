@@ -1,0 +1,43 @@
+namespace: dev
+
+replicaCount: 1
+
+image:
+  repository: my-app
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "250m"
+  limits:
+    memory: "128Mi"
+    cpu: "500m"
+
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 3000
+
+ingress:
+  enabled: true
+  hosts:
+    - host: dev.my-app.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - dev.my-app.local
+      secretName: dev-ingress-tls
+
+logLevel: debug
+
+persistence:
+  enabled: true
+  storageClass: standard
+  size: 512Mi
+
+secrets:
+  enabled: false

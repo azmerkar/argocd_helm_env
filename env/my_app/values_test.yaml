@@ -1,0 +1,44 @@
+namespace: test
+
+replicaCount: 2
+
+image:
+  repository: my-app
+  tag: "v1.2.3"
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "500m"
+  limits:
+    memory: "256Mi"
+    cpu: "1"
+
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 3000
+
+ingress:
+  enabled: true
+  hosts:
+    - host: test.my-app.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - test.my-app.local
+      secretName: test-ingress-tls
+
+logLevel: info
+
+persistence:
+  enabled: true
+  storageClass: standard
+  size: 1Gi
+
+secrets:
+  enabled: true
+  vaultPath: "secret/data/test/my-app"

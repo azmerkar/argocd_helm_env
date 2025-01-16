@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app-test
+  namespace: argocd
+spec:
+  destination:
+    namespace: test
+    server: 'https://kubernetes.default.svc'
+  source:
+    repoURL: 'https://github.com/your-repo/your-helm-chart-repo.git'
+    path: my-app
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values-test.yaml
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+
+
